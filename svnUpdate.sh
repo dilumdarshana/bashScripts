@@ -1,39 +1,42 @@
 #!/bin/bash
 
-
 usage()
 {
 	cat <<EOF
 
 	OPTIONS:
-    --username <USER>       SVN username to use for svn info
-    --password <PASS>       SVN password for the given user
+   
 EOF
 }
 
-rootPat=/var/www/downloads
-dashboardFolder=cdb
-SVN_USERNAME=$1
-SVN_PASSWORD=$2
+rootPath=/var/www/downloads
+dashboardFolder=cdb #new_20160218
+svnRepoURL=http://202.148.162.37/svn/octopus-web/src/trunk/dashboard
 
-for dir in /$rootPat/*/
+# loop thru all the directories inside given rootPath
+for dir in /$rootPath/*/
 do
     dir=${dir%*/}
 
     repoDirectory=${dir##*/}
 
-    repoPath=$rootPat/$repoDirectory/$dashboardFolder
+    repoPath=$rootPath/$repoDirectory/$dashboardFolder
 
-    cd $repoPath
+    if [ -d "$repoPath" ]; then
 
-    if [ -d '.svn' ]
-		then
-			echo "Updating project:$repoDirectory, Proj Path: $repoPath"
-			svn update
-			echo "Done."		
+	    cd $repoPath
+
+	    # check whether the SVN URL are in required repo
+	    repoUrlCheck=$(svn info $svnRepoURL | grep '^URL')
+	   
+	    if [ -d '.svn' ] && [ repoUrlCheck==$svnRepoURL ]; then
+				echo "Updating project:$repoDirectory, Proj Path: $repoPath"
+				svn update
+				echo "Done"
+		else
+			echo "Failed!"
+		fi
+
+		cd ..
 	fi
-
-	cd ..
-
-    #svn update --username $SVN_USERNAME --password $SVN_PASSWORD
 done
