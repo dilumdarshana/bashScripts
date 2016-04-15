@@ -11,7 +11,7 @@ EOF
 
 rootPath=/var/www/downloads
 dashboardFolder=cdb #new_20160218
-svnRepoURL=http://202.148.162.37/svn/octopus-web/src/trunk/dashboard
+svnRepoURL=http://xxx.xxx.xxx.xxx/svn/octopus-web/src/trunk/dashboard
 
 # loop thru all the directories inside given rootPath
 for dir in /$rootPath/*/
